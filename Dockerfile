@@ -1,5 +1,5 @@
 ARG MY_SERVICE_PORT=4001
-FROM node:15
+FROM node:latest
 
 # Create app directory
 WORKDIR /usr/src/app
