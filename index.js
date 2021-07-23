@@ -19,10 +19,10 @@ const {ApolloGateway} = require('@apollo/gateway')
 
 const gateway = new ApolloGateway({
     serviceList: [
-        { name: 'company', url: `http://${process.env.COMPANY_URL}/graphiql` },
+      /*  { name: 'company', url: `http://${process.env.COMPANY_URL}/graphiql` },
         { name: 'product', url: `http://${process.env.PRODUCT_URL}/graphiql` },
-        { name: 'profile', url: `http://${process.env.PROFILE_URL}/graphiql` },
-        { name: 'customer', url: `http://${process.env.CUSTOMER_URL}/graphiql`}
+        { name: 'profile', url: `http://${process.env.PROFILE_URL}/graphiql` },*/
+        { name: 'serial-number-generator', url: `http://${process.env.SERIAL_NUMBER_GENERATOR_URL}/graphiql`}
     ]
 });
 

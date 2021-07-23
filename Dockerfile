@@ -1,4 +1,4 @@
-ARG MY_SERVICE_PORT=4001
+ARG MY_SERVICE_PORT=5000
 FROM node:latest
 
 # Create app directory
