@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/name: pt-ser-graphql-gateway
+    app.kubernetes.io/instance: pt-ser-graphql-gateway-instance
+    app.kubernetes.io/version: '1.0.0'
+    app.kubernetes.io/managed-by: kubectl
+  name: pt-ser-graphql-gateway-deployment
+  namespace: serialization
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pt-ser-graphql-gateway
+  template:
+    metadata:
+      labels:
+        app: pt-ser-graphql-gateway
+    spec:
+      containers:
+        - image: 035764999992.dkr.ecr.eu-central-1.amazonaws.com/pt-ser-graphql-gateway:latest
+          imagePullPolicy: Always
+          name: pt-ser-graphql-gateway
+          ports:
+            - containerPort: 5000
+          envFrom:
+            - secretRef:
+                name: rds-secret
