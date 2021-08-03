@@ -23,7 +23,8 @@ const gateway = new ApolloGateway({
         { name: 'company', url: `http://${process.env.COMPANY_URL}/graphiql` },
         { name: 'product', url: `http://${process.env.PRODUCT_URL}/graphiql` },
         { name: 'customer', url: `http://${process.env.CUSTOMER_URL}/graphiql` },
-        { name: 'serial-number-generator', url: `http://${process.env.SERIAL_NUMBER_GENERATOR_URL}/graphiql`}
+        { name: 'serial-number-generator', url: `http://${process.env.SERIAL_NUMBER_GENERATOR_URL}/graphiql`},
+        { name: 'profile-service', url: `http://${process.env.profile_url}/graphiql`}
     ]
 });
 
