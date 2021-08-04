@@ -25,6 +25,7 @@ const gateway = new ApolloGateway({
         { name: 'customer', url: `http://${process.env.CUSTOMER_URL}/graphiql` },
         { name: 'serialization-profile', url: `http://${process.env.SERIALIZATION_PROFILE}/graphiql` },
         { name: 'serial-number-generator', url: `http://${process.env.SERIAL_NUMBER_GENERATOR_URL}/graphiql`}
+        // Editing it to trigger the build 
     ]
 });
 
