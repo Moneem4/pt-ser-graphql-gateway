@@ -1,0 +1,11 @@
+{
+  "realm": "keycloak-connect-graphql",
+  "auth-server-url": "http://localhost:8080/",
+  "ssl-required": "external",
+  "resource": "test-keycloak-gateway",
+  "use-resource-role-mappings": true,
+  "credentials": {
+    "secret": "UNtvxVH8jJtQmwUtezMUsjyJW1Kg8axx"
+  }
+}
+

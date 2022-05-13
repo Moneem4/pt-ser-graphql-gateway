@@ -14,9 +14,21 @@
  * limitations under the License.
  */
 
-const { ApolloServer, gql } = require('apollo-server');
-const {ApolloGateway} = require('@apollo/gateway')
+const { ApolloServer } = require('apollo-server-express');
+const {ApolloGateway,RemoteGraphQLDataSource} = require('@apollo/gateway')
+const { configureKeycloak } = require('./lib/common')
+const {
+  KeycloakContext,
+  KeycloakTypeDefs,
+  KeycloakSchemaDirectives
+} = require('keycloak-connect-graphql')
+const express = require('express')
+const cors = require("cors")
+const expressPlayground = require('graphql-playground-middleware-express').default;
 require('dotenv').config()
+
+const app = express()
+const graphqlPath = '/graphql';
 
 const gateway = new ApolloGateway({
     serviceList: [
@@ -26,8 +38,61 @@ const gateway = new ApolloGateway({
         { name: 'serialization-profile', url: `http://${process.env.SERIALIZATION_PROFILE}/graphiql` },
         { name: 'serial-number-generator', url: `http://${process.env.SERIAL_NUMBER_GENERATOR_URL}/graphiql`}
         // Editing it to trigger the build 
-    ]
-});
+    ],
+    buildService({ name, url }) {
+      return new RemoteGraphQLDataSource({
+        url,
+        willSendRequest({ request, context }) {
+          if (context.kauth
+             && context.kauth.request
+             && context.kauth.request.headers
+             && context.kauth.request.headers.authorization
+             ) {
+           request.http.headers.set('Authorization', context.kauth.request.headers.authorization);
+          }
+          console.log(`OUT OF CONTEXT ==> `)
+        }
+      })
+    },
+    // Experimental: Enabling this enables the query plan view in Playground.
+    __exposeQueryPlanExperimental: false,
+  });
 
-const server = new ApolloServer({ gateway, subscriptions:false, tracing:true });
-server.listen({port: process.env.HTTP_PORT});
+(async () => {
+  // perform the standard keycloak-connect middleware setup on our app
+  const { keycloak } = configureKeycloak(app, graphqlPath);
+
+  // Ensure entire GraphQL Api can only be accessed by authenticated users
+  function allowAll(token, request) {
+     return true;
+    }
+
+  app.use(graphqlPath, keycloak.protect(allowAll));
+
+  const server = new ApolloServer({
+    gateway,
+
+    // Apollo Graph Manager (previously known as Apollo Engine)
+    // When enabled and an `ENGINE_API_KEY` is set in the environment,
+    // provides metrics, schema management and trace reporting.
+    engine: false,
+
+    // Subscriptions are unsupported but planned for a future Gateway version.
+    subscriptions: false,
+
+    // Disable default playground
+    playground: false,
+
+    context: ({ req }) => {
+      return {
+        kauth: new KeycloakContext({ req })
+      }
+    }
+  });
+
+
+server.applyMiddleware({ app })
+app.listen( {port: process.env.HTTP_PORT} , () => {
+  console.log(`🚀 Server ready at http://localhost:${process.env.HTTP_PORT}${graphqlPath}`)
+  })
+ })();
