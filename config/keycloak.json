@@ -1,11 +1,10 @@
 {
-  "realm": "keycloak-connect-graphql",
-  "auth-server-url": "http://localhost:8080/",
-  "ssl-required": "external",
-  "resource": "test-keycloak-gateway",
+  "realm": "DeveloperTest",
+  "bearer-only": true,
+  "auth-server-url": "https://kc.k8s.pharmatrace.io/auth",
+  "ssl-required": "all",
+  "resource": "gql-gateway",
+  "verify-token-audience": true,
   "use-resource-role-mappings": true,
-  "credentials": {
-    "secret": "UNtvxVH8jJtQmwUtezMUsjyJW1Kg8axx"
-  }
+  "confidential-port": 0
 }
-
