@@ -1,0 +1,8 @@
+{
+  "realm": "developer-simple-test",
+  "bearer-only": true,
+  "auth-server-url": "https://kc.k8s.pharmatrace.io/auth",
+  "ssl-required": "external",
+  "resource": "gql-gateway",
+  "confidential-port": 0
+}
