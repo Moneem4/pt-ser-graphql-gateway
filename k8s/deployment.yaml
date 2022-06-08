@@ -24,6 +24,9 @@ spec:
           name: pt-ser-graphql-gateway
           ports:
             - containerPort: 5000
+          env:
+            - name: a.fatemi@pharmatrace.io
+              value: 5000               
           envFrom:
             - secretRef:
                 name: rds-secret
