@@ -40,16 +40,19 @@ const gateway = new ApolloGateway({
         // Editing it to trigger the build 
     ],
     buildService({ name, url }) {
-      return new RemoteGraphQLDataSource({
+     return new RemoteGraphQLDataSource({
         url,
         willSendRequest({ request, context }) {
           if (context.kauth
              && context.kauth.request
-             && context.kauth.request.headers
-             && context.kauth.request.headers.authorization
-             ) {
-           request.http.headers.set('Authorization', context.kauth.request.headers.authorization);
-          }
+             && context.kauth.request.headers) {
+             if (context.kauth.request.headers.authorization) {
+                 request.http.headers.set('Authorization', context.kauth.request.headers.authorization);
+               }
+
+             if (context.kauth.request.headers.tenantId) {
+                  request.http.headers.set('tenantId', context.kauth.request.headers.tenantId); }
+             }
           console.log(`OUT OF CONTEXT ==> `)
         }
       })
