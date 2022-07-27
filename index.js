@@ -43,6 +43,7 @@ const gateway = new ApolloGateway({
      return new RemoteGraphQLDataSource({
         url,
         willSendRequest({ request, context }) {
+         if (context.req && context.req.headers) {    
            const headers = context.req.headers
             console.log(`Headers => ${headers}`);
             for (const key in headers) {
@@ -52,6 +53,7 @@ const gateway = new ApolloGateway({
                     request.http?.headers.set(key, String(value));
                 }
             }
+          }
         }
       })
     },
@@ -86,7 +88,8 @@ const gateway = new ApolloGateway({
 
     context: ({ req }) => {
       return {
-        kauth: new KeycloakContext({ req })
+        kauth: new KeycloakContext({ req }),
+        serverRequest: req
       }
     }
   });
