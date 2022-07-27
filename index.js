@@ -43,8 +43,8 @@ const gateway = new ApolloGateway({
      return new RemoteGraphQLDataSource({
         url,
         willSendRequest({ request, context }) {
-         if (context.req && context.req.headers) {    
-           const headers = context.req.headers
+         if (context.serverRequest && context.serverRequest.headers) {    
+           const headers = context.serverRequest.headers
             console.log(`Headers => ${headers}`);
             for (const key in headers) {
                 const value = headers[key];
