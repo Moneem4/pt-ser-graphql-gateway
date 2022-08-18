@@ -1,6 +1,6 @@
 ARG MY_SERVICE_PORT=5000
 #FROM node:latest
-FROM public.ecr.aws/bitnami/node:12.22.12-debian-10-r41
+FROM public.ecr.aws/bitnami/node:18.7.0-debian-11-r7
 # Create app directory
 WORKDIR /usr/src/app
 

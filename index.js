@@ -49,9 +49,9 @@ const gateway = new ApolloGateway({
             for (const key in headers) {
                 const value = headers[key];
                 console.log(`${key} => ${value} `);
-                if (value) {
-                    request.http?.headers.set(key, String(value));
-                }
+//                if (value) {
+//                    request.http?.headers.set(key, String(value));
+//                }
             }
           }
         }
