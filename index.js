@@ -33,11 +33,10 @@ const graphqlPath = '/graphql';
 
 const gateway = new ApolloGateway({
     serviceList: [
-        { name: 'company', url: `http://localhost:8080/graphql` },
-//        { name: 'company', url: `http://${process.env.COMPANY_URL}/graphql` },
-//        { name: 'product', url: `http://${process.env.PRODUCT_URL}/graphql` },
-//        { name: 'customer', url: `http://${process.env.CUSTOMER_URL}/graphiql` },
-//        { name: 'serialization-profile', url: `http://${process.env.SERIALIZATION_PROFILE}/graphiql` }
+       { name: 'company', url: `http://${process.env.COMPANY_URL}/graphql` },
+       { name: 'product', url: `http://${process.env.PRODUCT_URL}/graphql` },
+       { name: 'customer', url: `http://${process.env.CUSTOMER_URL}/graphiql` },
+       { name: 'serialization-profile', url: `http://${process.env.SERIALIZATION_PROFILE}/graphiql` }
 //        { name: 'serial-number-generator', url: `http://${process.env.SERIAL_NUMBER_GENERATOR_URL}/graphiql`}
         // Editing it to trigger the build 
     ],
