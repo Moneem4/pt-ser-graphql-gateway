@@ -16,12 +16,12 @@
 
 const { ApolloServer } = require('apollo-server-express');
 const {ApolloGateway,RemoteGraphQLDataSource} = require('@apollo/gateway')
-//const { configureKeycloak } = require('./lib/common')
-//const {
-//  KeycloakContext,
-//  KeycloakTypeDefs,
-//  KeycloakSchemaDirectives
-//} = require('keycloak-connect-graphql')
+const { configureKeycloak } = require('./lib/common')
+const {
+  KeycloakContext,
+  KeycloakTypeDefs,
+  KeycloakSchemaDirectives
+} = require('keycloak-connect-graphql')
 const express = require('express')
 const cors = require("cors")
 const expressPlayground = require('graphql-playground-middleware-express').default;
@@ -62,15 +62,15 @@ const gateway = new ApolloGateway({
   });
 
 (async () => {
-  // perform the standard keycloak-connect middleware setup on our app
-//  const { keycloak } = configureKeycloak(app, graphqlPath);
+//   perform the standard keycloak-connect middleware setup on our app
+  const { keycloak } = configureKeycloak(app, graphqlPath);
 
-  // Ensure entire GraphQL Api can only be accessed by authenticated users
-//  function allowAll(token, request) {
-//     return true;
-//    }
+//   Ensure entire GraphQL Api can only be accessed by authenticated users
+  function allowAll(token, request) {
+     return true;
+    }
 
-//  app.use(graphqlPath, keycloak.protect(allowAll));
+  app.use(graphqlPath, keycloak.protect(allowAll));
 
   const server = new ApolloServer({
     gateway,
@@ -88,14 +88,14 @@ const gateway = new ApolloGateway({
 
     context: ({ req }) => {
       return {
-//        kauth: new KeycloakContext({ req }),
+        kauth: new KeycloakContext({ req }),
         serverRequest: req
       }
     }
   });
 
 
-server.applyMiddleware({ app , path: graphqlPath })
+server.applyMiddleware({ app }) // , path: graphqlPath
 app.listen( {port: process.env.HTTP_PORT} , () => {
   console.log(`🚀 Server ready at http://localhost:${process.env.HTTP_PORT}${graphqlPath}`)
   })
