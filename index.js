@@ -16,14 +16,15 @@
 
 const { ApolloServer } = require('apollo-server-express');
 const {ApolloGateway,RemoteGraphQLDataSource} = require('@apollo/gateway')
-const { configureKeycloak } = require('./lib/common')
-const {
-  KeycloakContext,
-  KeycloakTypeDefs,
-  KeycloakSchemaDirectives
-} = require('keycloak-connect-graphql')
+// const { configureKeycloak } = require('./lib/common')
+// const {
+//   KeycloakContext,
+//   KeycloakTypeDefs,
+//   KeycloakSchemaDirectives
+// } = require('keycloak-connect-graphql')
 const express = require('express')
-const cors = require("cors")
+const cors = require("cors");
+const { graphql } = require('graphql');
 const expressPlayground = require('graphql-playground-middleware-express').default;
 require('dotenv').config()
 
@@ -32,10 +33,11 @@ const graphqlPath = '/graphql';
 
 const gateway = new ApolloGateway({
     serviceList: [
+        { name: 'company', url: `http://localhost:8080/graphql` },
 //        { name: 'company', url: `http://${process.env.COMPANY_URL}/graphql` },
-        { name: 'product', url: `http://${process.env.PRODUCT_URL}/graphql` },
-        { name: 'customer', url: `http://${process.env.CUSTOMER_URL}/graphiql` },
-        { name: 'serialization-profile', url: `http://${process.env.SERIALIZATION_PROFILE}/graphiql` }
+//        { name: 'product', url: `http://${process.env.PRODUCT_URL}/graphql` },
+//        { name: 'customer', url: `http://${process.env.CUSTOMER_URL}/graphiql` },
+//        { name: 'serialization-profile', url: `http://${process.env.SERIALIZATION_PROFILE}/graphiql` }
 //        { name: 'serial-number-generator', url: `http://${process.env.SERIAL_NUMBER_GENERATOR_URL}/graphiql`}
         // Editing it to trigger the build 
     ],
@@ -49,9 +51,9 @@ const gateway = new ApolloGateway({
             for (const key in headers) {
                 const value = headers[key];
                 console.log(`${key} => ${value} `);
-//                if (value) {
-//                    request.http?.headers.set(key, String(value));
-//                }
+                if (value) {
+                    request.http?.headers.set(key, String(value));
+                }
             }
           }
         }
@@ -63,14 +65,14 @@ const gateway = new ApolloGateway({
 
 (async () => {
 //   perform the standard keycloak-connect middleware setup on our app
-  const { keycloak } = configureKeycloak(app, graphqlPath);
+  // const { keycloak } = configureKeycloak(app, graphqlPath);
 
 //   Ensure entire GraphQL Api can only be accessed by authenticated users
-  function allowAll(token, request) {
-     return true;
-    }
+  // function allowAll(token, request) {
+  //    return true;
+  //   }
 
-  app.use(graphqlPath, keycloak.protect(allowAll));
+  // app.use(graphqlPath, keycloak.protect(allowAll));
 
   const server = new ApolloServer({
     gateway,
@@ -88,14 +90,14 @@ const gateway = new ApolloGateway({
 
     context: ({ req }) => {
       return {
-        kauth: new KeycloakContext({ req }),
+        // kauth: new KeycloakContext({ req }),
         serverRequest: req
       }
     }
   });
 
 
-server.applyMiddleware({ app }) // , path: graphqlPath
+server.applyMiddleware({ app , path: graphqlPath}) // , path: graphqlPath
 app.listen( {port: process.env.HTTP_PORT} , () => {
   console.log(`🚀 Server ready at http://localhost:${process.env.HTTP_PORT}${graphqlPath}`)
   })
